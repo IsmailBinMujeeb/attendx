@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { PlusCircle, Save, X, Pencil, Search, Loader2 } from "lucide-react";
 import { supabase } from "@/app/supabase";
+import { toast } from "sonner";
 
 type Student = {
   id: number;
@@ -105,7 +106,7 @@ export default function Students() {
         console.log(classesData);
         setClasses(classesData);
       } catch (error) {
-        console.error(error);
+        toast.error((error as Error).message);
       } finally {
         setIsLoading(false);
       }
@@ -132,7 +133,7 @@ export default function Students() {
     if (!newRow) return;
     const { rollNo, name, email, gender, city, dob, class: classData } = newRow;
     if (!rollNo || !name || !email || !gender || !city || !dob) {
-      alert("Please fill in all fields before saving.");
+      toast.error("Please fill in all fields before saving.");
       return;
     }
 
@@ -146,7 +147,7 @@ export default function Students() {
       );
 
       if (fnError) {
-        alert(`Failed to create user: ${fnError.message}`);
+        toast.error(`Failed to create user: ${fnError.message}`);
         return;
       }
 
@@ -162,7 +163,7 @@ export default function Students() {
       });
 
       if (insertError) {
-        alert(`Failed to insert student: ${insertError.message}`);
+        toast.error(`Failed to insert student: ${insertError.message}`);
         return;
       }
 
@@ -181,7 +182,7 @@ export default function Students() {
       ]);
       setNewRow(null);
     } catch (error) {
-      alert(
+      toast.error(
         `Failed to create student: ${error instanceof Error ? error.message : String(error)}`,
       );
     } finally {
@@ -228,7 +229,7 @@ export default function Students() {
       class: classData,
     } = editData;
     if (!rollNo || !name || !email || !gender || !city || !dob) {
-      alert("Please fill in all fields before saving.");
+      toast.error("Please fill in all fields before saving.");
       return;
     }
 
@@ -248,7 +249,7 @@ export default function Students() {
         .eq("id", editId);
 
       if (error) {
-        alert(`Failed to update student: ${error.message}`);
+        toast.error(`Failed to update student: ${error.message}`);
         return;
       }
 
@@ -270,7 +271,7 @@ export default function Students() {
       );
       setEditId(null);
     } catch (error) {
-      alert(
+      toast.error(
         `Failed to update student: ${error instanceof Error ? error.message : String(error)}`,
       );
     } finally {

@@ -21,6 +21,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { supabase } from "@/app/supabase";
+import { toast } from "sonner";
 
 type ClassType = {
   id: number;
@@ -57,7 +58,7 @@ export default function Classes() {
       .order("created_at", { ascending: true });
 
     if (error) {
-      console.error("Error fetching classes:", error);
+      toast.error("Error fetching classes: " + error.message);
     } else {
       setClasses(
         (data as RawClass[]).map((c) => ({
@@ -105,7 +106,7 @@ export default function Classes() {
   const handleSave = async () => {
     if (!newRow) return;
     if (!isValid(newRow)) {
-      alert("Please fill in all fields before saving.");
+      toast.info("Please fill in all fields before saving.");
       return;
     }
     setSaving(true);
@@ -134,7 +135,7 @@ export default function Classes() {
       await fetchClasses();
     } catch (err) {
       console.error("Error saving class:", err);
-      alert("Failed to save class. Please try again.");
+      toast.error("Failed to save class. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -161,7 +162,7 @@ export default function Classes() {
   // Update class name + replace all subjects
   const handleEditSave = async () => {
     if (!isValid(editData) || editId === null) {
-      alert("Please fill in all fields before saving.");
+      toast.error("Please fill in all fields before saving.");
       return;
     }
     setSaving(true);
@@ -196,7 +197,7 @@ export default function Classes() {
       await fetchClasses();
     } catch (err) {
       console.error("Error updating class:", err);
-      alert("Failed to update class. Please try again.");
+      toast.error("Failed to update class. Please try again.");
     } finally {
       setSaving(false);
     }
@@ -214,7 +215,7 @@ export default function Classes() {
       await fetchClasses();
     } catch (err) {
       console.error("Error deleting class:", err);
-      alert("Failed to delete class. Please try again.");
+      toast.error("Failed to delete class. Please try again.");
     } finally {
       setSaving(false);
     }

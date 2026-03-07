@@ -20,6 +20,7 @@ import {
   QRCodeOverlay,
   QRCodeSkeleton,
 } from "@/components/ui/qr-code";
+import { toast } from "sonner";
 
 type Student = {
   id: string;
@@ -79,7 +80,7 @@ export default function LectureAttendance() {
 
         if (error) {
           console.error(error);
-          alert(error.message);
+          toast.error(error.message);
           return;
         }
 
@@ -97,7 +98,7 @@ export default function LectureAttendance() {
         setCreatedAt(data.created_at);
       } catch (error) {
         console.error(error);
-        alert((error as Error).message);
+        toast.error((error as Error).message);
       } finally {
         setIsLoading(false);
       }
@@ -126,13 +127,12 @@ export default function LectureAttendance() {
         subject_id: subjects?.id,
         is_present: isPresent,
       },
-
       { onConflict: "lecture_id,student_id" },
     );
 
     if (error) {
       console.error(error);
-      alert(error.message);
+      toast.error(error.message);
       return;
     }
   };
@@ -199,7 +199,11 @@ export default function LectureAttendance() {
               </Table>
               <div className="flex flex-col items-center gap-2">
                 <QRCode
-                  value={JSON.stringify({ lectureId })}
+                  value={JSON.stringify({
+                    lectureId,
+                    classId: classes?.id,
+                    subjectId: subjects?.id,
+                  })}
                   size={200}
                   level="H"
                   className="gap-4"

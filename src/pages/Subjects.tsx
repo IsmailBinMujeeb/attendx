@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Save, X, Pencil, Search, Loader2 } from "lucide-react";
 import { supabase } from "@/app/supabase";
+import { toast } from "sonner";
 
 type Subject = {
   id: number;
@@ -62,7 +63,7 @@ export default function Subjects() {
         .returns<Subject[]>();
 
       if (error) {
-        console.error("Error fetching subjects:", error);
+        toast.error("Error fetching subjects: " + error);
       } else {
         console.log(data);
         const subjects = data.map((d) => ({
@@ -92,7 +93,7 @@ export default function Subjects() {
   const handleEditSave = async () => {
     const { name, class: classData } = editData;
     if (!name.trim() || !classData.name.trim()) {
-      alert("Please fill in all fields before saving.");
+      toast.error("Please fill in all fields before saving.");
       return;
     }
 
@@ -108,7 +109,7 @@ export default function Subjects() {
       setEditId(null);
     } catch (error) {
       console.error(error);
-      alert("Failed to save subject. Please try again.");
+      toast.error("Failed to save subject. Please try again.");
     } finally {
       setIsSaving(false);
     }

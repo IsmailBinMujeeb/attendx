@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { PlusCircle, Save, X, Pencil, Search, Loader2 } from "lucide-react";
 import { supabase } from "@/app/supabase";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 type Class = { id: number; name: string };
 type Subject = { id: number; name: string };
@@ -86,7 +87,7 @@ export default function Lectures() {
         setClasses(classesData ?? []);
         setSubjects(subjectsData ?? []);
       } catch (error) {
-        console.error(error);
+        toast.error((error as Error).message);
       } finally {
         setIsLoading(false);
       }
@@ -122,7 +123,7 @@ export default function Lectures() {
     if (!newRow) return;
     const { class: cls, subject } = newRow;
     if (!cls.id || !subject.id) {
-      alert("Please select both a class and a subject.");
+      toast.error("Please select both a class and a subject.");
       return;
     }
     setIsSaving(true);
@@ -134,14 +135,14 @@ export default function Lectures() {
         .single();
 
       if (error) {
-        alert(`Failed to add lecture: ${error.message}`);
+        toast.error(`Failed to add lecture: ${error.message}`);
         return;
       }
 
       setLectures((prev) => [...prev, inserted as unknown as Lecture]);
       setNewRow(null);
     } catch (error) {
-      alert(error);
+      toast.error((error as Error).message);
     } finally {
       setIsSaving(false);
     }
@@ -170,7 +171,7 @@ export default function Lectures() {
   const handleEditSave = async () => {
     const { class: cls, subject } = editData;
     if (!cls.id || !subject.id) {
-      alert("Please select both a class and a subject.");
+      toast.error("Please select both a class and a subject.");
       return;
     }
 
@@ -182,7 +183,7 @@ export default function Lectures() {
         .eq("id", editId);
 
       if (error) {
-        alert(`Failed to update lecture: ${error.message}`);
+        toast.error(`Failed to update lecture: ${error.message}`);
         return;
       }
 
@@ -195,7 +196,7 @@ export default function Lectures() {
       );
       setEditId(null);
     } catch (error) {
-      alert(error);
+      toast.error((error as Error).message);
     } finally {
       setIsSaving(false);
     }
