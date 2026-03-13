@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Logo } from "@/components/logo";
 import LoginImage from "@/assets/login-image.jpg";
 import { supabase } from "@/app/supabase";
 import { useNavigate } from "react-router-dom";
@@ -56,8 +55,7 @@ const SignUp = () => {
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="grid h-full w-full p-4 lg:grid-cols-2">
-        <div className="m-auto flex w-full max-w-xs flex-col items-center">
-          <Logo className="h-9 w-9" />
+        <div className="m-auto flex w-full max-w-xs flex-col items-center gap-8">
           <p className="mt-4 font-semibold text-xl tracking-tight">
             Sign up for AttendX
           </p>

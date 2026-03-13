@@ -1,22 +1,17 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem
 } from "@/components/ui/sidebar";
 
 export function NavMainVertical({
-  items
+  items,
 }: {
   items: {
     title: string;
@@ -33,7 +28,7 @@ export function NavMainVertical({
 }) {
   return (
     <>
-      {items.map((item, i) => (
+      {items.map((item) => (
         <SidebarGroup>
           <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
           <SidebarMenu>

@@ -1,0 +1,58 @@
+rollNo,name,email,gender,dob,city,class
+1,BAIKAR CHAITALI SATISH,chaitali.baikar01@example.com,Female,2004-01-05,Navi Mumbai,Bsc IT TY
+2,BHALERAO MRUNAL AMIT,mrunal.bhalerao02@example.com,Male,2004-02-12,Navi Mumbai,Bsc IT TY
+3,CHAVHAN SUNIL JAYRAM,sunil.chavhan03@example.com,Male,2003-11-21,Navi Mumbai,Bsc IT TY
+4,CHOUDHARY SHIFA RAMZAN ALI,shifa.choudhary04@example.com,Female,2004-03-09,Navi Mumbai,Bsc IT TY
+5,DEOKAR ADITYA DNYANESHWAR,aditya.deokar05@example.com,Male,2003-08-18,Navi Mumbai,Bsc IT TY
+6,DERE SIDDHESH DATTATRAY,siddhesh.dere06@example.com,Male,2004-06-14,Navi Mumbai,Bsc IT TY
+7,DESAI NIRMIT MITESH,nirmit.desai07@example.com,Male,2004-04-27,Navi Mumbai,Bsc IT TY
+8,DHENGALE HRISHIKESH MILIND,hrishikesh.dhengale08@example.com,Male,2003-12-02,Navi Mumbai,Bsc IT TY
+9,GHERAD AKSHATA GAJANAN,akshata.gherad09@example.com,Female,2004-05-10,Navi Mumbai,Bsc IT TY
+10,GOND ANAND CHANDRIKAPRASAD,anand.gond10@example.com,Male,2003-09-15,Navi Mumbai,Bsc IT TY
+11,GURAV SRUSHTI SANTOSH,srushti.gurav11@example.com,Female,2004-07-19,Navi Mumbai,Bsc IT TY
+12,HALWAI PRACHI YOGESH,prachi.halwai12@example.com,Female,2003-10-08,Navi Mumbai,Bsc IT TY
+13,JADHAV VEDIKA TABAJI,vedika.jadhav13@example.com,Female,2004-01-30,Navi Mumbai,Bsc IT TY
+14,KANSE SAISH GANESH,saish.kanse14@example.com,Male,2003-07-25,Navi Mumbai,Bsc IT TY
+15,KHAIRE PRANJAL KISHOR,pranjal.khaire15@example.com,Female,2004-02-22,Navi Mumbai,Bsc IT TY
+16,KHAN IRFAN AHMAD,irfan.khan16@example.com,Male,2003-11-03,Navi Mumbai,Bsc IT TY
+17,KHARATMOL BHOOMIKA SAUDAGAR,bhoomika.kharatmol17@example.com,Female,2004-06-09,Navi Mumbai,Bsc IT TY
+18,KOLI KARTIK NITIN,kartik.koli18@example.com,Male,2003-12-14,Navi Mumbai,Bsc IT TY
+19,KOLI SWAYAM KISHOR,swayam.koli19@example.com,Male,2004-03-11,Navi Mumbai,Bsc IT TY
+20,KORVI ROHAN RAYAPPA,rohan.korvi20@example.com,Male,2003-08-29,Navi Mumbai,Bsc IT TY
+21,LONDHE PRATHAM GANESH,pratham.londhe21@example.com,Male,2004-05-17,Navi Mumbai,Bsc IT TY
+22,MARATHE VEDANT DATTA,vedant.marathe22@example.com,Male,2003-09-09,Navi Mumbai,Bsc IT TY
+23,MARDHEKAR ARYAN KRISHNA,aryan.mardhekar23@example.com,Male,2004-04-01,Navi Mumbai,Bsc IT TY
+24,MINDE DIVYA MARUTI,divya.minde24@example.com,Female,2003-10-19,Navi Mumbai,Bsc IT TY
+25,MOTE VIJAYSINGH ABASAHEB,vijaysingh.mote25@example.com,Male,2004-01-11,Navi Mumbai,Bsc IT TY
+26,NAIDU TANISH PUSHPARAJ,tanish.naidu26@example.com,Male,2003-06-07,Navi Mumbai,Bsc IT TY
+27,NAKTI SHRAVANI KISHOR,shravani.nakti27@example.com,Female,2004-07-04,Navi Mumbai,Bsc IT TY
+28,PADEKAR SAHIL VINOD,sahil.padekar28@example.com,Male,2003-11-26,Navi Mumbai,Bsc IT TY
+29,PATEL SALMAN MOHAMMED ALI,salman.patel29@example.com,Male,2004-02-08,Navi Mumbai,Bsc IT TY
+30,PATIL ADITI SATYAVAN,aditi.patil30@example.com,Female,2003-12-21,Navi Mumbai,Bsc IT TY
+31,PATIL PRERANA TUKARAM,prerana.patil31@example.com,Female,2004-05-23,Navi Mumbai,Bsc IT TY
+32,PATIL SANJANA SUDAM,sanjana.patil32@example.com,Female,2003-09-14,Navi Mumbai,Bsc IT TY
+33,PATIL SHRIDHAR SHRIKRISHNA,shridhar.patil33@example.com,Male,2004-03-30,Navi Mumbai,Bsc IT TY
+34,PRAJAPATI SHIVAM SATAYANARAYAN,shivam.prajapati34@example.com,Male,2003-07-18,Navi Mumbai,Bsc IT TY
+35,PUYED VISHAL MOHAN,vishal.puyed35@example.com,Male,2004-04-12,Navi Mumbai,Bsc IT TY
+36,RAJAN DHANUSH SUNDAR,dhanush.rajan36@example.com,Male,2003-10-03,Navi Mumbai,Bsc IT TY
+37,RANDHAVAN ATHARV ANKUSH,atharv.randhavan37@example.com,Male,2004-01-16,Navi Mumbai,Bsc IT TY
+38,SABLE KESHAV SANGAM,keshav.sable38@example.com,Male,2003-08-05,Navi Mumbai,Bsc IT TY
+39,SAKMANI ADNAN IRSHAD,adnan.sakmani39@example.com,Male,2004-06-28,Navi Mumbai,Bsc IT TY
+40,SANAS SOHAM MARUTI,soham.sanas40@example.com,Male,2003-11-10,Navi Mumbai,Bsc IT TY
+41,SAWANT DEEP AMARNATH,deep.sawant41@example.com,Male,2004-02-13,Navi Mumbai,Bsc IT TY
+42,SAWANT HRISHIKESH GORAKH,hrishikesh.sawant42@example.com,Male,2003-12-07,Navi Mumbai,Bsc IT TY
+43,SHAIKH AYAAN ILYAS,ayaan.shaikh43@example.com,Male,2004-05-02,Navi Mumbai,Bsc IT TY
+44,SHAIKH MOIN YASHIN,moin.shaikh44@example.com,Male,2003-09-28,Navi Mumbai,Bsc IT TY
+45,SHARMA ABHISHEK SURESH,abhishek.sharma45@example.com,Male,2004-03-19,Navi Mumbai,Bsc IT TY
+46,SHEIKH MISBAH MOHAMMED MUSLIM,misbah.sheikh46@example.com,Male,2003-07-12,Navi Mumbai,Bsc IT TY
+47,SHIGWAN SIDDHI SATISH,siddhi.shigwan47@example.com,Female,2004-04-06,Navi Mumbai,Bsc IT TY
+48,SHINDE VIGHNESH SANTOSH,vighnesh.shinde48@example.com,Male,2003-10-22,Navi Mumbai,Bsc IT TY
+49,SOHANI ADITYA LALA,aditya.sohani49@example.com,Male,2004-01-25,Navi Mumbai,Bsc IT TY
+50,SONKIA DEEPTI VIJAYKUMAR,deepti.sonkia50@example.com,Female,2003-08-31,Navi Mumbai,Bsc IT TY
+51,SURVE ADAM GULAM HUSAIN,adam.surve51@example.com,Male,2004-06-15,Navi Mumbai,Bsc IT TY
+52,VASKAR VAISHNAVI RAJESH,vaishnavi.vaskar52@example.com,Female,2003-11-05,Navi Mumbai,Bsc IT TY
+53,VISHWASRAO SHUBHAM GAJANAN,shubham.vishwasrao53@example.com,Male,2004-02-17,Navi Mumbai,Bsc IT TY
+54,WARKHADE PRAJAKTA JAYWANT,prajakta.warkhade54@example.com,Female,2003-09-01,Navi Mumbai,Bsc IT TY
+55,YADAV SEEMA SANJAY,seema.yadav55@example.com,Female,2004-05-26,Navi Mumbai,Bsc IT TY
+56,YADAV SHRADDHA BAJARANG,shraddha.yadav56@example.com,Female,2003-12-11,Navi Mumbai,Bsc IT TY
+57,YESHWANTE ADITI PRAKASH,aditi.yeshwante57@example.com,Female,2004-03-07,Navi Mumbai,Bsc IT TY

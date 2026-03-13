@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/app/supabase";
 // import Dashboard from "@/components/dashboard";
+import { isSameNetwork } from "@/lib/is-same-network";
+
 import {
   Loader2,
   GraduationCap,
@@ -16,6 +18,8 @@ import { AppHeader } from "@/components/page-layouts/components/app-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import QRScanner from "@/components/QR-Scanner";
 import { toast } from "sonner";
+import { BadgeCheck } from "@/components/animate-ui/icons/badge-check";
+import { CircleX } from "@/components/animate-ui/icons/circle-x";
 
 type Subject = { id: number; name: string };
 type StudentData = {
@@ -58,6 +62,8 @@ const subjectIcons = [
 export default function StudentPortal() {
   const [student, setStudent] = useState<StudentData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [scanSuccess, setScanSuccess] = useState(false);
+  const [scanError, setScanError] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -89,12 +95,23 @@ export default function StudentPortal() {
 
   const handleAttendance = async (decodedText: string) => {
     try {
-      const { lectureId, classId, subjectId } = JSON.parse(decodedText);
+      const { lectureId, classId, subjectId, ip_address } =
+        JSON.parse(decodedText);
+      const { data, error: ipError } =
+        await supabase.functions.invoke("get-ip");
+
+      if (ipError) throw ipError;
 
       if (!student) return;
+      if (!isSameNetwork(ip_address, data.ip)) {
+        setScanError(true);
+        return toast.error("This QR code is not for your device.");
+      }
 
-      if (String(classId) !== student.class.id.toString())
+      if (String(classId) !== student.class.id.toString()) {
+        setScanError(true);
         return toast.error("This QR code is not for your class.");
+      }
 
       const { error } = await supabase.from("attendance").upsert(
         {
@@ -112,7 +129,9 @@ export default function StudentPortal() {
       }
 
       toast.success("Attendance marked successfully!");
+      setScanSuccess(true);
     } catch (error) {
+      setScanError(true);
       toast.error("Failed to mark attendance. Please try again.");
       console.error(error);
     }
@@ -177,7 +196,29 @@ export default function StudentPortal() {
 
               <h1 className="text-xl font-bold tracking-tight text-foreground mb-2 leading-tight">
                 {student.name}
-                <QRScanner onScan={(data) => handleAttendance(data)} />
+                <QRScanner onScan={(data) => handleAttendance(data)}>
+                  {scanSuccess && (
+                    <div>
+                      <BadgeCheck
+                        animate={"check"}
+                        className="text-green-500"
+                        size={62}
+                      />
+                    </div>
+                  )}
+                  {scanError && (
+                    <div>
+                      <CircleX
+                        animate={"path"}
+                        className="text-red-500"
+                        size={62}
+                      />
+                    </div>
+                  )}
+                  {!scanSuccess && !scanError && (
+                    <div id="reader" style={{ width: "300px" }} />
+                  )}
+                </QRScanner>
               </h1>
 
               {student.class && (

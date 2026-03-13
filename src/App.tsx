@@ -9,6 +9,7 @@ import Subjects from "@/pages/Subjects";
 import Classes from "@/pages/Classes";
 import StudentPortal from "./pages/StudentPortal";
 import NotFound from "@/pages/NotFound";
+import { Logout } from "./pages/Logout";
 
 import { AuthProvider } from "@/context/AuthContext";
 import { useAuth } from "@/hooks/useAuth";
@@ -84,6 +85,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

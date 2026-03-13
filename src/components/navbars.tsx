@@ -17,7 +17,7 @@ import { Sun, Moon } from "lucide-react";
 
 const Logo = () => {
   return (
-    <Link to="#" className="flex items-center space-x-2">
+    <Link to="/" className="flex items-center space-x-2">
       {/*<img src="/logo.svg" className="size-8 dark:invert" alt="bundui logo" />*/}
       <span className="text-2xl font-bold">AttendX</span>
     </Link>
@@ -32,11 +32,22 @@ export default function Navbar() {
 
   const navigationLinks = [
     { href: "/", label: "Home", active: true, isVisible: true },
-    { href: "/#features", label: "Features", isVisible: true },
+    // { href: "/#features", label: "Features", isVisible: true },
     { href: "/pricing", label: "Pricing", isVisible: true },
-    { href: "/#about", label: "About", isVisible: true },
+    // { href: "/#about", label: "About", isVisible: true },
     { href: "/login", label: "Sign Up", isVisible: !session },
-    { href: "/students", label: "Dashboard", isVisible: !!session },
+    {
+      href: "/students",
+      label: "Dashboard",
+      isVisible:
+        !!session && session.user.email === import.meta.env.VITE_ADMIN_EMAIL,
+    },
+    {
+      href: "/portal",
+      label: "Student Portal",
+      isVisible:
+        !!session && session.user.email !== import.meta.env.VITE_ADMIN_EMAIL,
+    },
   ];
 
   const switchTheme = () => {

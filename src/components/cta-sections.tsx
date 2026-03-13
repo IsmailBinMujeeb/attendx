@@ -1,6 +1,6 @@
-import { ChevronRight } from "lucide-react";
 import CTAImage from "@/assets/cta-image.jpg";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function CTASection() {
   return (
@@ -18,11 +18,14 @@ export default function CTASection() {
               </p>
             </div>
             <div className="mt-4 flex flex-col justify-center gap-3 sm:flex-row! lg:justify-start">
-              <Button>
-                Start Free Trial
-                <ChevronRight />
-              </Button>
-              <Button variant="outline">Schedule a Demo</Button>
+              <div className="flex justify-center gap-2">
+                <Button asChild>
+                  <Link to="/login">Start Free Trial</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link to="/pricing">See our planes</Link>
+                </Button>
+              </div>
             </div>
           </header>
           <figure className="relative lg:mt-10 lg:self-end">

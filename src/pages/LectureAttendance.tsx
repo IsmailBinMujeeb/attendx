@@ -40,6 +40,7 @@ export default function LectureAttendance() {
     students: Student[];
   } | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
+  const [ipAddress, setIpAddress] = useState<string | null>(null);
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -53,6 +54,7 @@ export default function LectureAttendance() {
             `id, subject_id, created_at,
              subjects (id, name),
              class_id,
+             ip_address,
              class (id, name,
                students (id, rollNo, name,
                  attendance (is_present, lecture_id)
@@ -66,6 +68,7 @@ export default function LectureAttendance() {
             created_at: string;
             subjects: { id: string; name: string };
             class_id: string;
+            ip_address: string | null;
             class: {
               id: string;
               name: string;
@@ -86,6 +89,7 @@ export default function LectureAttendance() {
 
         setSubjects(data.subjects);
         setClasses(data.class);
+        setIpAddress(data.ip_address);
 
         const studentsWithFilteredAttendance = data.class.students.map((s) => ({
           ...s,
@@ -203,6 +207,7 @@ export default function LectureAttendance() {
                     lectureId,
                     classId: classes?.id,
                     subjectId: subjects?.id,
+                    ip_address: ipAddress || "unknown",
                   })}
                   size={200}
                   level="H"

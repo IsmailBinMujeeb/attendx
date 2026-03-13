@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Dashboard from "@/components/dashboard";
 import {
   Table,
@@ -18,7 +18,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PlusCircle, Save, X, Pencil, Search, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  PlusCircle,
+  Save,
+  X,
+  Pencil,
+  Search,
+  Loader2,
+  Upload,
+  AlertCircle,
+  CheckCircle2,
+} from "lucide-react";
 import { supabase } from "@/app/supabase";
 import { toast } from "sonner";
 
@@ -31,6 +49,18 @@ type Student = {
   city: string;
   dob: string;
   class: { id: number; name: string };
+};
+
+type CsvRow = {
+  rollNo: string;
+  name: string;
+  email: string;
+  gender: string;
+  city: string;
+  dob: string;
+  class: string;
+  _status?: "pending" | "success" | "error";
+  _error?: string;
 };
 
 const initialStudents: Student[] = [
@@ -56,6 +86,16 @@ const emptyStudent = {
   class: { id: 0, name: "BCS" },
 };
 
+const REQUIRED_CSV_HEADERS = [
+  "rollNo",
+  "name",
+  "email",
+  "gender",
+  "city",
+  "dob",
+  "class",
+];
+
 export default function Students() {
   const [students, setStudents] = useState<Student[]>(initialStudents);
   const [newRow, setNewRow] = useState<null | typeof emptyStudent>(null);
@@ -68,20 +108,29 @@ export default function Students() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  // CSV import state
+  const csvInputRef = useRef<HTMLInputElement>(null);
+  const [csvDialogOpen, setCsvDialogOpen] = useState(false);
+  const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
+  const [csvError, setCsvError] = useState<string | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importDone, setImportDone] = useState(false);
+
   const filteredStudents = useMemo(() => {
     const q = search.toLowerCase().trim();
     if (!q) return students;
+    console.log(students);
     return students.filter((s) =>
-      [s.rollNo, s?.name, s.email, s.gender, s.city, s.dob].some((val) =>
-        val.toLowerCase().includes(q),
-      ),
+      [s.rollNo, s?.name, s.email, s.gender, s.city, s.dob].some((val) => {
+        if (!val || typeof val !== "string") return false;
+        return val.toLowerCase().includes(q);
+      }),
     );
   }, [students, search]);
 
   useEffect(() => {
     (async () => {
       setIsLoading(true);
-
       try {
         const { data, error } = await supabase
           .from("students")
@@ -92,7 +141,6 @@ export default function Students() {
           .returns<Student[]>();
 
         if (error) throw error;
-
         setStudents(data);
 
         const { data: classesData, error: classesError } = await supabase
@@ -102,8 +150,6 @@ export default function Students() {
           .returns<{ id: number; name: string }[]>();
 
         if (classesError) throw classesError;
-
-        console.log(classesData);
         setClasses(classesData);
       } catch (error) {
         toast.error((error as Error).message);
@@ -113,9 +159,164 @@ export default function Students() {
     })();
   }, []);
 
-  const handleAddRow = () => {
-    setNewRow({ ...emptyStudent });
+  // ── CSV Import ────────────────────────────────────────────────────────────────
+
+  const parseCsv = (text: string): { rows: CsvRow[]; error: string | null } => {
+    const lines = text.trim().split(/\r?\n/);
+    if (lines.length < 2)
+      return { rows: [], error: "CSV file is empty or has no data rows." };
+
+    const headers = lines[0]
+      .split(",")
+      .map((h) => h.trim().replace(/^"|"$/g, ""));
+    const missing = REQUIRED_CSV_HEADERS.filter((h) => !headers.includes(h));
+    if (missing.length > 0) {
+      return {
+        rows: [],
+        error: `Missing required columns: ${missing.join(", ")}`,
+      };
+    }
+
+    const rows: CsvRow[] = lines
+      .slice(1)
+      .map((line) => {
+        const values = line
+          .split(",")
+          .map((v) => v.trim().replace(/^"|"$/g, ""));
+        const obj: Record<string, string> = {};
+        headers.forEach((h, i) => {
+          obj[h] = values[i] ?? "";
+        });
+        return {
+          rollNo: obj.rollNo,
+          name: obj.name,
+          email: obj.email,
+          gender: obj.gender,
+          city: obj.city,
+          dob: obj.dob,
+          class: obj.class,
+          _status: "pending",
+        } as CsvRow;
+      })
+      .filter((r) => r.rollNo || r.name || r.email); // skip blank rows
+
+    return { rows, error: null };
   };
+
+  const handleCsvFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset input so same file can be re-selected
+    e.target.value = "";
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const text = evt.target?.result as string;
+      const { rows, error } = parseCsv(text);
+      setCsvError(error);
+      setCsvRows(rows);
+      setImportDone(false);
+      setCsvDialogOpen(true);
+    };
+    reader.readAsText(file);
+  };
+
+  const handleImportCsv = async () => {
+    if (csvRows.length === 0) return;
+    setIsImporting(true);
+
+    const updatedRows = [...csvRows];
+
+    for (let i = 0; i < updatedRows.length; i++) {
+      const row = updatedRows[i];
+      if (row._status === "success") continue;
+
+      console.log(classes);
+      const classObj = classes.find(
+        (c) => c.name.toLowerCase() === row.class.toLowerCase(),
+      );
+      console.log("ClassIbj", classObj);
+
+      if (!classObj) {
+        updatedRows[i] = {
+          ...row,
+          _status: "error",
+          _error: `Class "${row.class}" not found`,
+        };
+        setCsvRows([...updatedRows]);
+        continue;
+      }
+
+      try {
+        const { data, error: fnError } = await supabase.functions.invoke(
+          "supabase-functions-deploy-create-student-user",
+          { body: { email: row.email, name: row.name, dob: row.dob } },
+        );
+
+        if (fnError) throw new Error(fnError.message);
+
+        const { error: insertError } = await supabase.from("students").insert({
+          rollNo: row.rollNo,
+          name: row.name,
+          email: row.email,
+          gender: row.gender,
+          city: row.city,
+          dob: row.dob,
+          class_id: classObj.id,
+          user_id: data.userId,
+        });
+
+        if (insertError) throw new Error(insertError.message);
+
+        updatedRows[i] = { ...row, _status: "success" };
+        setStudents((prev) => [
+          ...prev,
+          {
+            id: Date.now() + i,
+            rollNo: row.rollNo,
+            name: row.name,
+            email: row.email,
+            gender: row.gender,
+            city: row.city,
+            dob: row.dob,
+            class: classObj,
+          },
+        ]);
+      } catch (err) {
+        updatedRows[i] = {
+          ...row,
+          _status: "error",
+          _error: err instanceof Error ? err.message : String(err),
+        };
+      }
+
+      setCsvRows([...updatedRows]);
+    }
+
+    setIsImporting(false);
+    setImportDone(true);
+
+    const successCount = updatedRows.filter(
+      (r) => r._status === "success",
+    ).length;
+    const errorCount = updatedRows.filter((r) => r._status === "error").length;
+    toast.success(
+      `Import complete: ${successCount} succeeded, ${errorCount} failed.`,
+    );
+  };
+
+  const handleCloseCsvDialog = () => {
+    if (isImporting) return;
+    setCsvDialogOpen(false);
+    setCsvRows([]);
+    setCsvError(null);
+    setImportDone(false);
+  };
+
+  // ── Existing handlers ─────────────────────────────────────────────────────────
+
+  const handleAddRow = () => setNewRow({ ...emptyStudent });
 
   const handleNewChange = (field: string, value: string) => {
     if (field === "class") {
@@ -141,9 +342,7 @@ export default function Students() {
     try {
       const { data, error: fnError } = await supabase.functions.invoke(
         "supabase-functions-deploy-create-student-user",
-        {
-          body: { email, name, dob },
-        },
+        { body: { email, name, dob } },
       );
 
       if (fnError) {
@@ -413,14 +612,33 @@ export default function Students() {
           )}
         </div>
 
-        <Button
-          onClick={handleAddRow}
-          disabled={newRow !== null}
-          className="flex items-center gap-2"
-        >
-          <PlusCircle className="w-4 h-4" />
-          Add Student
-        </Button>
+        <div className="flex items-center gap-2">
+          {/* Hidden file input */}
+          <input
+            ref={csvInputRef}
+            type="file"
+            accept=".csv"
+            className="hidden"
+            onChange={handleCsvFileChange}
+          />
+          <Button
+            variant="outline"
+            onClick={() => csvInputRef.current?.click()}
+            className="flex items-center gap-2"
+          >
+            <Upload className="w-4 h-4" />
+            Import CSV
+          </Button>
+
+          <Button
+            onClick={handleAddRow}
+            disabled={newRow !== null}
+            className="flex items-center gap-2"
+          >
+            <PlusCircle className="w-4 h-4" />
+            Add Student
+          </Button>
+        </div>
       </div>
 
       {isLoading ? (
@@ -495,6 +713,129 @@ export default function Students() {
           </TableBody>
         </Table>
       )}
+
+      {/* CSV Import Dialog */}
+      <Dialog
+        open={csvDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) handleCloseCsvDialog();
+        }}
+      >
+        <DialogContent className="max-w-3xl max-h-[80vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Import Students from CSV</DialogTitle>
+            <DialogDescription>
+              Expected columns:{" "}
+              <code className="text-xs bg-muted px-1 py-0.5 rounded">
+                {REQUIRED_CSV_HEADERS.join(", ")}
+              </code>
+            </DialogDescription>
+          </DialogHeader>
+
+          {csvError ? (
+            <div className="flex items-start gap-2 rounded-md border border-destructive/50 bg-destructive/10 p-3 text-sm text-destructive">
+              <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+              <span>{csvError}</span>
+            </div>
+          ) : (
+            <div className="overflow-auto flex-1 rounded-md border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-8">#</TableHead>
+                    <TableHead>Roll No</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Gender</TableHead>
+                    <TableHead>City</TableHead>
+                    <TableHead>DOB</TableHead>
+                    <TableHead>Class</TableHead>
+                    <TableHead className="w-24">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {csvRows.map((row, i) => (
+                    <TableRow
+                      key={i}
+                      className={
+                        row._status === "success"
+                          ? "bg-green-50 dark:bg-green-950/20"
+                          : row._status === "error"
+                            ? "bg-red-50 dark:bg-red-950/20"
+                            : ""
+                      }
+                    >
+                      <TableCell className="text-muted-foreground text-xs">
+                        {i + 1}
+                      </TableCell>
+                      <TableCell>{row.rollNo}</TableCell>
+                      <TableCell>{row.name}</TableCell>
+                      <TableCell className="max-w-35 truncate">
+                        {row.email}
+                      </TableCell>
+                      <TableCell>{row.gender}</TableCell>
+                      <TableCell>{row.city}</TableCell>
+                      <TableCell>{row.dob}</TableCell>
+                      <TableCell>{row.class}</TableCell>
+                      <TableCell>
+                        {row._status === "pending" && (
+                          <span className="text-xs text-muted-foreground">
+                            Pending
+                          </span>
+                        )}
+                        {row._status === "success" && (
+                          <span className="flex items-center gap-1 text-xs text-green-600">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Done
+                          </span>
+                        )}
+                        {row._status === "error" && (
+                          <span
+                            className="flex items-center gap-1 text-xs text-red-600"
+                            title={row._error}
+                          >
+                            <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                            <span className="truncate max-w-20">
+                              {row._error}
+                            </span>
+                          </span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={handleCloseCsvDialog}
+              disabled={isImporting}
+            >
+              {importDone ? "Close" : "Cancel"}
+            </Button>
+            {!csvError && !importDone && (
+              <Button
+                onClick={handleImportCsv}
+                disabled={isImporting || csvRows.length === 0}
+                className="flex items-center gap-2"
+              >
+                {isImporting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" /> Importing...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" /> Import {csvRows.length}{" "}
+                    student{csvRows.length !== 1 ? "s" : ""}
+                  </>
+                )}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Dashboard>
   );
 }

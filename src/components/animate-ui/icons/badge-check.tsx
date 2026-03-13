@@ -1,14 +1,11 @@
-'use client';
-
-import * as React from 'react';
-import { motion, type Variants } from 'motion/react';
+import { motion, type Variants } from "motion/react";
 
 import {
   getVariants,
   useAnimateIconContext,
   IconWrapper,
   type IconProps,
-} from '@/components/animate-ui/icons/icon';
+} from "@/components/animate-ui/icons/icon";
 
 type BadgeCheckProps = IconProps<keyof typeof animations>;
 
@@ -20,7 +17,7 @@ const animations = {
         scale: [1, 0.9, 1],
         transition: {
           duration: 1.2,
-          ease: 'easeInOut',
+          ease: "easeInOut",
         },
       },
     },
@@ -30,7 +27,7 @@ const animations = {
         pathLength: [1, 0, 1],
         transition: {
           duration: 1.2,
-          ease: 'easeInOut',
+          ease: "easeInOut",
           opacity: { duration: 0.01 },
         },
       },
@@ -44,7 +41,7 @@ const animations = {
         opacity: [0, 1],
         transition: {
           duration: 0.6,
-          ease: 'easeInOut',
+          ease: "easeInOut",
           opacity: { duration: 0.01 },
         },
       },

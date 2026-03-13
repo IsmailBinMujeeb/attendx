@@ -23,9 +23,7 @@ export default function HeroSection() {
             </p>
             <div className="flex justify-center gap-2">
               <Button asChild>
-                <Link to="https://app.yoursaas.com/signup">
-                  Start Free Trial
-                </Link>
+                <Link to="/login">Start Free Trial</Link>
               </Button>
               <Button asChild variant="outline">
                 <Link to="/pricing">See our planes</Link>

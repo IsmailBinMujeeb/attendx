@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { BookOpenIcon, InfoIcon } from "lucide-react";
+import { BookOpenIcon, InfoIcon, LogOut } from "lucide-react";
 
 import {
   Sidebar,
@@ -22,7 +22,7 @@ export const navigationLinks = [
     items: [
       { url: "/", title: "Home", icon: BookOpenIcon },
       { url: "/pricing", title: "Pricing Page", icon: InfoIcon },
-      // { url: "/users", title: "User List", icon: LifeBuoyIcon }
+      { url: "/logout", title: "Logout", icon: LogOut },
     ],
   },
 ];

@@ -7,12 +7,12 @@ import {
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 export function NavProjects({
-  projects
+  projects,
 }: {
   projects: {
     name: string;
@@ -27,7 +27,7 @@ export function NavProjects({
         {projects.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <Link href={item.url}>
+              <Link to={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
               </Link>

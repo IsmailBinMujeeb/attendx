@@ -11,15 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  PlusCircle,
-  Save,
-  X,
-  Pencil,
-  Search,
-  Loader2,
-  Trash2,
-} from "lucide-react";
+import { PlusCircle, Save, X, Pencil, Search, Loader2 } from "lucide-react";
 import { supabase } from "@/app/supabase";
 import { toast } from "sonner";
 
@@ -206,20 +198,20 @@ export default function Classes() {
   const handleCancelEdit = () => setEditId(null);
 
   // Delete class (subjects cascade via FK)
-  const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this class?")) return;
-    setSaving(true);
-    try {
-      const { error } = await supabase.from("class").delete().eq("id", id);
-      if (error) throw error;
-      await fetchClasses();
-    } catch (err) {
-      console.error("Error deleting class:", err);
-      toast.error("Failed to delete class. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  };
+  // const handleDelete = async (id: number) => {
+  //   if (!confirm("Are you sure you want to delete this class?")) return;
+  //   setSaving(true);
+  //   try {
+  //     const { error } = await supabase.from("class").delete().eq("id", id);
+  //     if (error) throw error;
+  //     await fetchClasses();
+  //   } catch (err) {
+  //     console.error("Error deleting class:", err);
+  //     toast.error("Failed to delete class. Please try again.");
+  //   } finally {
+  //     setSaving(false);
+  //   }
+  // };
 
   const renderEditableRow = (
     data: ReturnType<typeof makeEmptyClass>,
@@ -354,7 +346,7 @@ export default function Classes() {
                       >
                         <Pencil className="w-4 h-4" />
                       </Button>
-                      <Button
+                      {/*<Button
                         size="icon"
                         variant="ghost"
                         onClick={() => handleDelete(cls.id)}
@@ -363,7 +355,7 @@ export default function Classes() {
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
-                      </Button>
+                      </Button>*/}
                     </div>
                   </TableCell>
                 </TableRow>

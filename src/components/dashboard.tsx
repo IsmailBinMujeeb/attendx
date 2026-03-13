@@ -25,7 +25,7 @@ export default function Dashboard({
 }) {
   const { session } = useAuth();
 
-  if (!(session as Session)?.user.email === import.meta.env.VITE_ADMIN_EMAIL) {
+  if ((session as Session)?.user.email !== import.meta.env.VITE_ADMIN_EMAIL) {
     return <Navigate to="/" />;
   }
 

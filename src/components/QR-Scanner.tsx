@@ -1,16 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import { DrawerComponent } from "@/components/Drawer";
 import { ScanQrCode } from "lucide-react";
-import { BadgeCheck } from "@/components/animate-ui/icons/badge-check";
+// import { BadgeCheck } from "@/components/animate-ui/icons/badge-check";
 
 interface QRScannerProps {
   onScan: (decodedText: string) => void;
+  // setScanSuccess: (success: boolean) => void;
+  // setScanError: (error: boolean) => void;
+  children: React.ReactNode;
 }
 
-export default function QRScanner({ onScan }: QRScannerProps) {
+export default function QRScanner({ onScan, children }: QRScannerProps) {
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const [scanDone, setScanDone] = useState(false);
 
   const startScanner = () => {
     requestAnimationFrame(() => {
@@ -39,7 +41,7 @@ export default function QRScanner({ onScan }: QRScannerProps) {
     if (scannerRef.current) {
       await scannerRef.current.stop();
       scannerRef.current = null;
-      setScanDone(true);
+      // setScanSuccess(true);
     }
   };
 
@@ -58,13 +60,14 @@ export default function QRScanner({ onScan }: QRScannerProps) {
       buttonIcon={<ScanQrCode />}
       buttonVariant={"ghost"}
     >
-      {scanDone ? (
+      {/*{scanSuccess ? (
         <div>
           <BadgeCheck animateOnViewOnce className="text-green-500" size={62} />
         </div>
       ) : (
         <div id="reader" style={{ width: "300px" }} />
-      )}
+      )}*/}
+      {children}
     </DrawerComponent>
   );
 }

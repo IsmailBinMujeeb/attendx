@@ -52,6 +52,7 @@ export default function Lectures() {
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [ipAddress, setIpAddress] = useState<null | string>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function Lectures() {
           { data: lecturesData, error: lecturesError },
           { data: classesData, error: classesError },
           { data: subjectsData, error: subjectsError },
+          { data: ipAddressData, error: ipAddressError },
         ] = await Promise.all([
           supabase
             .from("lectures")
@@ -77,15 +79,18 @@ export default function Lectures() {
             .from("subjects")
             .select("id, name")
             .order("created_at", { ascending: true }),
+          supabase.functions.invoke("get-ip"),
         ]);
 
         if (lecturesError) throw lecturesError;
         if (classesError) throw classesError;
         if (subjectsError) throw subjectsError;
+        if (ipAddressError) throw ipAddressError;
 
         setLectures(lecturesData as unknown as Lecture[]);
         setClasses(classesData ?? []);
         setSubjects(subjectsData ?? []);
+        setIpAddress(ipAddressData?.ip ?? null);
       } catch (error) {
         toast.error((error as Error).message);
       } finally {
@@ -130,14 +135,21 @@ export default function Lectures() {
     try {
       const { data: inserted, error } = await supabase
         .from("lectures")
-        .insert({ class_id: cls.id, subject_id: subject.id })
-        .select("id, class:class_id(id, name), subject:subject_id(id, name)")
+        .insert({
+          class_id: cls.id,
+          subject_id: subject.id,
+          ip_address: ipAddress,
+        })
+        .select(
+          "id, class:class_id(id, name), subject:subject_id(id, name), created_at",
+        )
         .single();
 
       if (error) {
         toast.error(`Failed to add lecture: ${error.message}`);
         return;
       }
+      console.log(inserted);
 
       setLectures((prev) => [...prev, inserted as unknown as Lecture]);
       setNewRow(null);
